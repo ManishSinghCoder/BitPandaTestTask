@@ -1,0 +1,122 @@
+<%- include('./modules/_header', {page: "Login"}); %>
+
+<div
+  class="login text-center bg-dark text-light flex-column justify-content-center"
+>
+  <%- include('./modules/_alert'); %>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+  <script>
+    async function connectWalletAndLogin() {
+      if (typeof window.ethereum === "undefined") {
+        alert("MetaMask not found.");
+        return;
+      }
+
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        const wallet = accounts[0];
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+
+        const { chainId } = await provider.getNetwork();
+        const ETH_MAINNET_ID = 1;
+
+        if (chainId !== ETH_MAINNET_ID) {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x1" }],
+          });
+        }
+
+        const domain = {
+          name: "MyApp",
+          version: "1",
+          chainId: ETH_MAINNET_ID,
+          verifyingContract: "0x0000000000000000000000000000000000000000",
+        };
+
+        const types = {
+          Mail: [{ name: "contents", type: "string" }],
+        };
+
+        const value = {
+          contents: "Please sign this message to login to MyApp",
+        };
+
+        const signature = await signer._signTypedData(domain, types, value);
+        const res = await fetch("/wallet-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ wallet, signature }),
+        });
+
+        if (res.redirected) {
+          window.location.href = res.url;
+        } else {
+          const data = await res.json();
+          alert(data.message || "Login failed.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Wallet connection failed: " + err.message);
+      }
+    }
+  </script>
+
+  <form class="form-signin" action="/login" method="post">
+    <div class="h4 mb-3 t-primary">World Wide Web Store</div>
+    <div class="h1 mb-3 text-warning">The W3b</div>
+    <h1 class="h5 mb-5 t-primary">W3bStore Management System</h1>
+
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input
+      type="email"
+      id="inputEmail"
+      class="form-control"
+      placeholder="Email address"
+      name="email"
+      required
+    />
+
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input
+      type="password"
+      id="inputPassword"
+      class="form-control"
+      placeholder="Password"
+      name="password"
+      required
+    />
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">
+      Sign in
+    </button>
+  </form>
+
+  <div class="h3 text-warning">OR</div>
+  <div class="form-signin">
+    <button
+      onclick="connectWalletAndLogin()"
+      class="btn btn-lg btn-primary btn-block"
+      type="submit"
+    >
+      Sign In With Wallet
+    </button>
+  </div>
+
+  <p class="mt-5 mb-3 text-muted">
+    &copy; <a class="text-warning" href="">W3bStore.com</a>
+    <% const date = new Date(); %> <%= date.getFullYear(); %>
+  </p>
+  <p class="f-12 text-muted">
+    Made with &hearts; by
+    <a class="text-secondary" href="#">W3bStoreDevs</a>
+  </p>
+</div>
+
+<%- include('modules/_footer'); %>

@@ -1,0 +1,11 @@
+[{
+    "_id": {
+      "$oid": "67f0017231b1e245a357f4cf"
+    },
+    "name": "System Admin",
+    "email": "sysadmin@w3bstore.com",
+    "password": "$2a$10$MU9.lmmKh6jkT3WGwDt5e.KbcUp.Kdk.3uLVRsfOzbRkutcTvN/Ry",
+    "role": "admin",
+    "wallet": "0xc36ba8fbfc87ad0464375f6c179ba0bf4e9d4e05"
+}
+]
