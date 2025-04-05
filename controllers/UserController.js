@@ -8,7 +8,7 @@ const {
 const UserController = {};
 
 UserController.create = async (req, res) => {
-  const { name, email, password, wallet, role } = req.body;
+  const { name, email, password, wallet,  role } = req.body;
   const validator = RegisterValidator({
     name,
     email,
@@ -27,12 +27,12 @@ UserController.create = async (req, res) => {
   }
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  const hashedWalletAddress = await bcrypt.hash(validator.wallet.address, salt);
+
   const newUser = new User({
     name: validator.value.name,
     email: validator.value.email,
     password: hashedPassword,
-    wallet: hashedWalletAddress,
+    wallet: validator.value.wallet.toLowerCase(),
     role,
   });
   try {

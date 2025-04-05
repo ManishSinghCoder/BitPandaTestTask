@@ -13,7 +13,7 @@ const RegisterValidator = (data) => {
     name: Joi.string().min(5).max(100).required(),
     email: Joi.string().lowercase().min(5).max(100).required().email().trim(),
     password: Joi.string().required().min(6),
-    wallet: Joi.string().required().lowercase(),
+    wallet: Joi.string().required(),
     role: Joi.string().required().lowercase(),
   });
   return validateSchema(schema, data);
