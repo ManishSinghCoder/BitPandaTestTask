@@ -120,3 +120,7 @@ Explanation on the added functionality , how it works, what we should look at, h
 
 [Screencast from 04-04-25 11:50:21 PM IST.webm](https://github.com/user-attachments/assets/75ed40f2-9c33-4fe5-9e1c-269b8b5b96be)
 
+## Please find the add user functionality in demo:
+[Screencast from 05-04-25 12:03:55 PM IST.webm](https://github.com/user-attachments/assets/bd31c817-7bdb-4135-9dcb-ec8be61571c5)
+
+
